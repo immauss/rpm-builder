@@ -1,0 +1,53 @@
+yum install python3-devel python3-pip php74 python36-lxml python36-dateutil python36-six \
+python36-setuptools wget python-stix python-cybox python-pydeep python-lief 
+
+
+
+No package python-stix available.
+No package cybox available.
+No package python-pydeep available.
+No package python-lief available.
+
+php
+php-pear
+php-pear-CommandLine
+php-pear-Crypt_GPG
+php-redis
+
+python-cybox
+python-stix
+python-mixbox
+python-pydeep
+python-pymisp
+python-lief (my current version doesn't work correctly, work in progress)
+misp
+
+Remi release
+https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+
+
+yum install -y php74 php74-php php74-php-pear  \
+php74-php-phpiredis python3-devel python3-pip python36-lxml   python36-six \
+python36-setuptools wget php74-php-devel php74-build python36-dateutil php74-php-mbstring \
+python3-httplib2 python36-PyYAML python36-attrs python36-backports_abc python36-beautifulsoup4 \
+python36-certifi python36-chardet python36-click python36-colorama python36-future \
+python36-idna python36-jsonschema python36-nose python36-olefile python36-pillow python36-ply \
+python36-pyparsing python36-pytz python36-requests python36-simplejson python36-tornadopython36-urllib3 python36-yara python36-zmq
+
+# Python modules to build
+python="python36-aiohttp python36-antlr4 python36-argparse python36-asnhistory python36-async_timeout python36-cabby python36-colorlog python36-cybox python36-dateutils python36-dnspython3 python36-dnspython python36-domaintools_api python36-ez_setup python36-furl python36-httplib2 python36-idna python36-idna_ssl python36-ipasn_redis python36-isodate python36-libtaxii python36-lxml python36-maec python36-mixbox python36-multidict python36-oauth2 python36-orderedmultidict python36-ordered_set python36-passivetotal python36-pip python36-pyaml python36-pydeep python36-pyeupi python36-pygeoip python36-pymisp python36-pyonyphe python36-pypdns python36-pypssl python36-pytesseract python36-python_dateutil python36-python_magic python36-pyzmq python36-rdflib python36-redis python36-setuptools python36-shodan python36-sigmatools python36-six python36-SPARQLWrapper python36-stix2_patterns python36-stix2 python36-stix python36-ujson python36-urlarchiver python36-url_normalize python36-uwhois python36-XlsxWriter python36-yarl"
+
+# Packages needed to build misp. Must be built in this order
+# May need to link pear and php from the remi to /usr/bin .... This may be an artifact of 
+# running in the container ... ls
+PHPPKGS="php-pear-Console_commandLine php-pear-Crypt_GPG"
+for spec in $()
+	# It seems the URL has changed at pear .... This should fix it in the spec.
+	sed -i -e "s/\(^Source0.*\)get\(.*$\)/\1package\2/" $spec 
+	# Download the Source
+	spectool -g -R $spec
+	# build the rpm
+	rpmbuild -bb $spec
+	# Install the RPM since we need it to build misp
+	
+	
